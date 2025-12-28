@@ -42,7 +42,7 @@ def get_llm():
     if mode == "ci":
         return FakeLLM()
 
-    if os.getenv("EXECUTION_MODE") == "true":
+    if os.getenv("EXECUTION_MODE") == "azure":
         return AzureOpenAIProvider(
             endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_SUBSCRIPTION"),
