@@ -3,16 +3,40 @@ from dotenv import load_dotenv
 from agents.ollama_provider import OllamaProvider
 from agents.azure_openai_provider import AzureOpenAIProvider
 from agents.search.policy_search import PolicySearchClient
+import json
 
 load_dotenv()
 
 class FakeLLM:
-    """
-    Deterministic fake LLM used ONLY for CI.
-    Never use in production or local inference.
-    """
     def generate(self, prompt: str) -> str:
-        return '{"policy_status": "CONDITIONAL", "conditions": ["TEST"], "hard_stop": false, "policy_references": []}'
+        prompt_lower = prompt.lower()
+
+        if "risk" in prompt_lower:
+            return json.dumps({
+                "risk_band": "MEDIUM",
+                "risk_factors": [
+                    "High EMI to income ratio",
+                    "Moderate credit score"
+                ]
+            })
+
+        if "policy" in prompt_lower:
+            return json.dumps({
+                "policy_status": "CONDITIONAL",
+                "conditions": ["REQUIRES_GUARANTOR"],
+                "hard_stop": False,
+                "policy_references": ["CREDIT-POL-4.2"]
+            })
+
+        if "explanation" in prompt_lower:
+            return json.dumps({
+                "key_reasons": [
+                    "Applicant meets income criteria",
+                    "Policy requires additional guarantee"
+                ]
+            })
+
+        return json.dumps({})
 
 def get_llm():
     mode = os.getenv("EXECUTION_MODE", "local")
