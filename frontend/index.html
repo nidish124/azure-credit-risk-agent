@@ -46,6 +46,14 @@
             <input id="applicant_id" required />
         </div>
         <div class="form-group">
+            <label for="employment_type">Employment Type</label>
+            <select id="employment_type" required>
+                <option value="SALARIED">SALARIED</option>
+                <option value="SELF_EMPLOYED">SELF_EMPLOYED</option>
+                <option value="CONTRACTOR">CONTRACTOR</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="monthly_income">Monthly Income</label>
             <input id="monthly_income" type="number" required />
         </div>
@@ -64,6 +72,22 @@
         <div class="form-group">
             <label for="loan_tenure_months">Tenure (months)</label>
             <input id="loan_tenure_months" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="product_type">Product Type</label>
+            <select id="product_type" required>
+                <option value="PERSONAL_LOAN">PERSONAL_LOAN</option>
+                <option value="HOME_LOAN">HOME_LOAN</option>
+                <option value="AUTO_LOAN">AUTO_LOAN</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="channel">Channel</label>
+            <select id="channel" required>
+                <option value="DIGITAL">DIGITAL</option>
+                <option value="BRANCH">BRANCH</option>
+                <option value="PARTNER">PARTNER</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="declared_assets_value">Declared Assets Value</label>
@@ -85,18 +109,18 @@
             const payload = {
                 application_id: document.getElementById("application_id").value,
                 applicant_id: document.getElementById("applicant_id").value,
-                employment_type: "SALARIED",
+                employment_type: document.getElementById("employment_type").value,
                 monthly_income: Number(document.getElementById("monthly_income").value),
                 existing_emi: Number(document.getElementById("existing_emi").value),
                 credit_score: Number(document.getElementById("credit_score").value),
                 loan_amount: Number(document.getElementById("loan_amount").value),
                 loan_tenure_months: Number(document.getElementById("loan_tenure_months").value),
-                product_type: "PERSONAL_LOAN",
-                channel: "DIGITAL",
+                product_type: document.getElementById("product_type").value,
+                channel: lementById("channel").value,
                 declared_assets_value: Number(document.getElementById("declared_assets_value").value)
             };
 
-            const res = await fetch("http://127.0.0.1:8000/credit/evaluate", {
+            const res = await fetch("https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainerapps.io/credit/evaluate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
