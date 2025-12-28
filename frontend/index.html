@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Credit Decision – Analyst Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        input,
+        button {
+            padding: 6px;
+            width: 300px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Credit Decision – Analyst Tool</h2>
+
+    <form id="creditForm">
+        <div class="form-group">
+            <label for="application_id">Application ID</label>
+            <input id="application_id" required />
+        </div>
+        <div class="form-group">
+            <label for="applicant_id">Applicant ID</label>
+            <input id="applicant_id" required />
+        </div>
+        <div class="form-group">
+            <label for="monthly_income">Monthly Income</label>
+            <input id="monthly_income" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="existing_emi">Existing EMI</label>
+            <input id="existing_emi" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="credit_score">Credit Score</label>
+            <input id="credit_score" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="loan_amount">Loan Amount</label>
+            <input id="loan_amount" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="loan_tenure_months">Tenure (months)</label>
+            <input id="loan_tenure_months" type="number" required />
+        </div>
+        <div class="form-group">
+            <label for="declared_assets_value">Declared Assets Value</label>
+            <input id="declared_assets_value" type="number" required />
+        </div>
+        <button type="submit">Evaluate</button>
+    </form>
+
+    <h3>Decision</h3>
+    <div id="decision"></div>
+
+    <h3>Explanation</h3>
+    <ul id="explanation"></ul>
+
+    <script>
+        document.getElementById("creditForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const payload = {
+                application_id: document.getElementById("application_id").value,
+                applicant_id: document.getElementById("applicant_id").value,
+                employment_type: "SALARIED",
+                monthly_income: Number(document.getElementById("monthly_income").value),
+                existing_emi: Number(document.getElementById("existing_emi").value),
+                credit_score: Number(document.getElementById("credit_score").value),
+                loan_amount: Number(document.getElementById("loan_amount").value),
+                loan_tenure_months: Number(document.getElementById("loan_tenure_months").value),
+                product_type: "PERSONAL_LOAN",
+                channel: "DIGITAL",
+                declared_assets_value: Number(document.getElementById("declared_assets_value").value)
+            };
+
+            const res = await fetch("http://127.0.0.1:8000/credit/evaluate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            const decisionDiv = document.getElementById("decision");
+            const explanationList = document.getElementById("explanation");
+
+            // Clear previous output
+            decisionDiv.innerHTML = "";
+            explanationList.innerHTML = "";
+
+            // Render decision
+            decisionDiv.innerHTML = `
+            <p><strong>Recommendation:</strong> ${data.decision.recommendation}</p>
+            <p><strong>Confidence:</strong> ${data.decision.confidence}</p>
+            <p><strong>Human Approval Required:</strong> ${data.decision.human_approval_required}</p>
+            <p><strong>Required Actions:</strong> ${data.decision.required_actions.length > 0
+                    ? data.decision.required_actions.join(", ")
+                    : "None"
+                }</p>
+            `;
+
+            // Render explanation
+            data.explanation.key_reasons.forEach(reason => {
+                const li = document.createElement("li");
+                li.textContent = reason;
+                explanationList.appendChild(li);
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>
