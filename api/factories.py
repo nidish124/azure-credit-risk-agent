@@ -9,34 +9,32 @@ load_dotenv()
 
 class FakeLLM:
     def generate(self, prompt: str) -> str:
-        prompt_lower = prompt.lower()
-
-        if "risk" in prompt_lower:
+        # Risk Agent
+        if "Applicant Data:" in prompt:
             return json.dumps({
                 "risk_band": "MEDIUM",
                 "risk_factors": [
-                    "High EMI to income ratio",
-                    "Moderate credit score"
-                ]
+                    {"factor": "Credit Score", "impact": "HIGH"}
+                ],
+                "data_quality_issues": []
             })
-
-        if "policy" in prompt_lower:
+        
+        # Explanation Agent
+        if "Risk output:" in prompt or "Policy Output:" in prompt:
             return json.dumps({
-                "policy_status": "CONDITIONAL",
-                "conditions": ["REQUIRES_GUARANTOR"],
-                "hard_stop": False,
+                "summary": "Application requires manual review due to medium risk.",
+                "key_reasons": ["Credit score is below 720", "Loan to income ratio"],
+                "risk_references": ["Credit Score"],
                 "policy_references": ["CREDIT-POL-4.2"]
             })
 
-        if "explanation" in prompt_lower:
-            return json.dumps({
-                "key_reasons": [
-                    "Applicant meets income criteria",
-                    "Policy requires additional guarantee"
-                ]
-            })
-
-        return json.dumps({})
+        # Policy Agent (Default or specific check)
+        return json.dumps({
+            "policy_status": "CONDITIONAL",
+            "conditions": ["ADD_GUARANTOR"],
+            "hard_stop": False,
+            "policy_references": ["CREDIT-POL-4.2"]
+        })
 
 def get_llm():
     mode = os.getenv("EXECUTION_MODE", "local")
