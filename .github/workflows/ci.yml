@@ -24,5 +24,7 @@ jobs:
           pip install .
 
       - name: Run tests
+        env:
+            EXECUTION_MODE: ci
         run: |
           pytest -q
