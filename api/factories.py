@@ -5,7 +5,7 @@ from agents.azure_openai_provider import AzureOpenAIProvider
 from agents.search.policy_search import PolicySearchClient
 import json
 
-load_dotenv()
+load_dotenv(override=True)
 
 class FakeLLM:
     def generate(self, prompt: str) -> str:
@@ -38,7 +38,7 @@ class FakeLLM:
 
 def get_llm():
     mode = os.getenv("EXECUTION_MODE", "local")
-    
+
     if mode == "ci":
         return FakeLLM()
 

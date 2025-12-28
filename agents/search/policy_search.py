@@ -4,7 +4,7 @@ from azure.core.credentials import AzureKeyCredential
 import os 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 class PolicySearchClient:

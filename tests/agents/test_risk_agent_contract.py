@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from api.factories import FakeLLM
 
-load_dotenv()
+load_dotenv(override=True)
 
 def test_risk_agent_input_contract():
     app = CreditApplication(
