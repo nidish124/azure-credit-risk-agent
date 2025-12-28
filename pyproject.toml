@@ -23,3 +23,7 @@ dependencies = [
     "setuptools>=80.9.0",
     "uvicorn>=0.40.0",
 ]
+
+[tool.setuptools.packages.find]
+include = ["api*", "graph*", "agents*", "contracts*"]
+exclude = ["frontend*", "tests*"]
