@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from agents.ollama_provider import OllamaProvider
 from agents.azure_openai_provider import AzureOpenAIProvider
 from agents.search.policy_search import PolicySearchClient
-from agents.fake_llm import FakeLLM
 
 load_dotenv()
 
