@@ -33,11 +33,11 @@ This system evaluates a credit application by orchestrating multiple specialized
 
 ```mermaid
 graph TD
-    Start[Credit Application] --> Risk[Risk Scoring Agent]
-    Risk --> Policy[Policy Interpretation Agent<br/>(RAG via Azure AI Search)]
-    Policy --> Decision[Decision Synthesis<br/>(Deterministic)]
-    Decision --> Explain[Explainability Agent]
-    Explain --> End[Final Decision<br/>(API Response)]
+    Start["Credit Application"] --> Risk["Risk Scoring Agent"]
+    Risk --> Policy["Policy Interpretation Agent<br/>(RAG via Azure AI Search)"]
+    Policy --> Decision["Decision Synthesis<br/>(Deterministic)"]
+    Decision --> Explain["Explainability Agent"]
+    Explain --> End["Final Decision<br/>(API Response)"]
 ```
 
 ---
@@ -77,16 +77,16 @@ Credit policies are stored in **Azure AI Search**. They are ingested once and up
 
 ```mermaid
 graph TD
-    Client[Frontend (Static HTML)] --> API[FastAPI (Azure Container App)]
+    Client["Frontend (Static HTML)"] --> API["FastAPI (Azure Container App)"]
     
     subgraph "LangGraph Orchestration"
-        API --> Risk[Risk Agent]
-        Risk --> Policy[Policy Agent (Azure AI Search)]
-        Policy --> Decision[Decision Engine]
-        Decision --> Explain[Explainability Agent]
+        API --> Risk["Risk Agent"]
+        Risk --> Policy["Policy Agent (Azure AI Search)"]
+        Policy --> Decision["Decision Engine"]
+        Decision --> Explain["Explainability Agent"]
     end
     
-    Explain --> OpenAI[Azure OpenAI (Production)]
+    Explain --> OpenAI["Azure OpenAI (Production)"]
 ```
 
 ### ☁️ Azure Stack
