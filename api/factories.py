@@ -4,7 +4,8 @@ from agents.ollama_provider import OllamaProvider
 from agents.azure_openai_provider import AzureOpenAIProvider
 from agents.search.policy_search import PolicySearchClient
 import json
-
+import logging
+logger = logging.getLogger("credit_decision")
 load_dotenv(override=True)
 
 class FakeLLM:
@@ -38,11 +39,13 @@ class FakeLLM:
 
 def get_llm():
     mode = os.getenv("EXECUTION_MODE", "local")
-
+    logger.info(
+            f"LLM retrieved from execution mode is : {mode}"
+        )
     if mode == "ci":
         return FakeLLM()
 
-    if os.getenv("EXECUTION_MODE") == "azure":
+    if mode == "azure":
         return AzureOpenAIProvider(
             endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_SUBSCRIPTION"),
@@ -51,7 +54,8 @@ def get_llm():
     return OllamaProvider()
 
 def get_policy_search_client():
-    if os.getenv("USE_AZURE_SEARCH") == "true":
+    mode = os.getenv("EXECUTION_MODE", "local")
+    if mode == "azure":
         return PolicySearchClient(
             endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
             index_name=os.getenv("AZURE_SEARCH_INDEX"),
@@ -62,7 +66,7 @@ def get_policy_search_client():
     class FakePolicySearchClient:
         def search(self, query: str, top_k: int = 5):
             return [
-                "CREDIT-POL-4.2: Applicants with credit score below 720 require a guarantor."
+                "CREDIT-POL-4.2.1: Applicants with credit score below 720 require a guarantor. "
             ]
 
     return FakePolicySearchClient()

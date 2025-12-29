@@ -36,10 +36,6 @@ class PolicyInterpretationAgent:
         logger.info(
             f"Policy documents retrieved: {policy_docs}"
         )
-
-        logger.info(
-            f"LLM Used: {self.llm}"
-        )
         
         prompt = f"""
         {self.prompt_template}
@@ -55,6 +51,10 @@ class PolicyInterpretationAgent:
         """
 
         raw = self.llm.generate(prompt)
+
+        logger.info(
+            f"LLM Used: {self.llm}, output of raw: {raw}"
+        )
 
         try:
             parsed = json.loads(raw)
