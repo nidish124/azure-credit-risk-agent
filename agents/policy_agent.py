@@ -36,6 +36,10 @@ class PolicyInterpretationAgent:
         logger.info(
             f"Policy documents retrieved: {policy_docs}"
         )
+
+        logger.info(
+            f"LLM Used: {self.llm}"
+        )
         
         prompt = f"""
         {self.prompt_template}
