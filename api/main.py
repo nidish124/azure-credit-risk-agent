@@ -8,7 +8,7 @@ app = FastAPI(
 )
 
 prod_origins = ["https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainerapps.io",
-"https://purple-bush-042ab5003-preview.westeurope.1.azurestaticapps.net"
+"https://purple-bush-042ab5003.1.azurestaticapps.net/"
 ]
 # ✅ CORS configuration (safe for internal tools)
 
