@@ -40,4 +40,4 @@ jobs:
           az containerapp update \
             --name credit-ai-app \
             --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:latest
+            --image creditaiacr.azurecr.io/credit-ai-service:V1
