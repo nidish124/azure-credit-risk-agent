@@ -22,13 +22,6 @@ jobs:
           docker build -t creditaiacr.azurecr.io/credit-ai-service:latest .
           docker push creditaiacr.azurecr.io/credit-ai-service:latest
 
-      - name: Deploy to Azure Container App
-        run: |
-          az containerapp update \
-            --name credit-ai-app \
-            --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:latest
-
       - name: Get ACR Admin Credentials 
         id: acr_credentials
         run: |
@@ -45,7 +38,6 @@ jobs:
             --resource-group credit-ai-rg \
             --image creditaiacr.azurecr.io/credit-ai-service:latest \
             
-            # 🔴 CRITICAL: Pass the credentials so the Container App can pull the new image
             --registry-server creditaiacr.azurecr.io \
             --registry-username ${{ steps.acr_credentials.outputs.acr_username }} \
             --registry-password ${{ steps.acr_credentials.outputs.acr_password }}
