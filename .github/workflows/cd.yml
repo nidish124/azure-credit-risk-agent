@@ -37,7 +37,6 @@ jobs:
             --name credit-ai-app \
             --resource-group credit-ai-rg \
             --image creditaiacr.azurecr.io/credit-ai-service:latest \
-            
             --registry-server creditaiacr.azurecr.io \
             --registry-username ${{ steps.acr_credentials.outputs.acr_username }} \
             --registry-password ${{ steps.acr_credentials.outputs.acr_password }}
