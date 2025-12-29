@@ -12,10 +12,9 @@ prod_origins = ["https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainer
 ]
 # ✅ CORS configuration (safe for internal tools)
 
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=prod_origins,          # For local dev only
+    allow_origins=["*"],          # For local dev only
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
