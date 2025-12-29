@@ -19,29 +19,12 @@ jobs:
       - name: Build and push image
         run: |
           az acr login --name creditaiacr
-          docker build -t creditaiacr.azurecr.io/credit-ai-service:v4 .
-          docker push creditaiacr.azurecr.io/credit-ai-service:v4
+          docker build -t creditaiacr.azurecr.io/credit-ai-service:v1 .
+          docker push creditaiacr.azurecr.io/credit-ai-service:v1
 
-      - name: Set ACR Admin Credentials 
-        id: acr_credentials
-        run: |
-          ACR_USER=$(az acr credential show -n creditaiacr --query 'username' -o tsv)
-          ACR_PASS=$(az acr credential show -n creditaiacr --query 'passwords[0].value' -o tsv)
-
-          az containerapp registry set \
-            --name credit-ai-app \
-            --resource-group credit-ai-rg \
-            --server creditaiacr.azurecr.io \
-            --username $ACR_USER \
-            --password $ACR_PASS
-
-          echo "acr_username=$ACR_USER" >> $GITHUB_OUTPUT
-          echo "acr_password=$ACR_PASS" >> $GITHUB_OUTPUT
-        shell: bash
-      
       - name: Deploy to Azure Container App
         run: |
           az containerapp update \
             --name credit-ai-app \
             --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:V4
+            --image creditaiacr.azurecr.io/credit-ai-service:v1
