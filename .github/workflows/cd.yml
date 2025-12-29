@@ -19,8 +19,8 @@ jobs:
       - name: Build and push image
         run: |
           az acr login --name creditaiacr
-          docker build -t creditaiacr.azurecr.io/credit-ai-service:v3 .
-          docker push creditaiacr.azurecr.io/credit-ai-service:v3
+          docker build -t creditaiacr.azurecr.io/credit-ai-service:v4 .
+          docker push creditaiacr.azurecr.io/credit-ai-service:v4
 
       - name: Set ACR Admin Credentials 
         id: acr_credentials
@@ -44,4 +44,4 @@ jobs:
           az containerapp update \
             --name credit-ai-app \
             --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:V3
+            --image creditaiacr.azurecr.io/credit-ai-service:V4
