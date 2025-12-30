@@ -11,7 +11,7 @@ load_dotenv(override=True)
 class FakeLLM:
     def generate(self, prompt: str) -> str:
         # Risk Agent
-        if "Applicant Data:" in prompt:
+        if "risk_band" in prompt and "risk_factors" in prompt and "credit risk analysis system" in prompt:
             return json.dumps({
                 "risk_band": "MEDIUM",
                 "risk_factors": [
@@ -20,22 +20,25 @@ class FakeLLM:
                 "data_quality_issues": []
             })
         
-        # Explanation Agent
-        if "Risk output:" in prompt or "Policy Output:" in prompt:
+        # Policy Agent
+        elif "policy_status" in prompt and "hard_stop" in prompt and "banking credit policy interpretation system" in prompt:
             return json.dumps({
-                "summary": "Application requires manual review due to medium risk.",
-                "key_reasons": ["Credit score is below 720", "Loan to income ratio"],
-                "risk_references": ["Credit Score"],
+                "policy_status": "CONDITIONAL",
+                "conditions": ["ADD_GUARANTOR"],
+                "hard_stop": False,
                 "policy_references": ["CREDIT-POL-4.2"]
             })
 
-        # Policy Agent (Default or specific check)
-        return json.dumps({
-            "policy_status": "CONDITIONAL",
-            "conditions": ["ADD_GUARANTOR"],
-            "hard_stop": False,
-            "policy_references": ["CREDIT-POL-4.2"]
-        })
+        # Explanation Agent
+        elif "risk_references" in prompt and "policy_references" in prompt and "audit explanation system" in prompt:
+            return json.dumps({
+                "summary": "Application requires conditional approval due to a policy exception and medium risk profile.",
+                "key_reasons": ["Credit score is below 720", "Policy requires an added guarantor"],
+                "risk_references": ["Credit Score", "Loan to Income Ratio"],
+                "policy_references": ["CREDIT-POL-4.2"]
+            })
+        else:
+            return json.dumps({"error": f"Unknown prompt received: {prompt[:50]}..."})
 
 def get_llm():
     mode = os.getenv("EXECUTION_MODE", "local")

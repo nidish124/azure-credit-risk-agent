@@ -1,24 +1,22 @@
 from contracts.graph_state import CreditDecisionGraphState
-from contracts.risk_output import RiskEvaluationOutput, RiskBand
-from contracts.policy_output import PolicyEvaluationOutput, PolicyStatus
-from contracts.explanation_output import ExplanationOutput
-from contracts.decision_output import DecisionOutput, DecisionRecommendation
-
-def risk_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
-    state.risk_output = RiskEvaluationOutput(
-        risk_band=RiskBand.MEDIUM,
-        risk_factors=[
-            {"factor": "DEBT_TO_INCOME", "impact": "HIGH"},
-            {"factor": "CREDIT_SCORE", "impact": "MEDIUM"}
-        ],
-        data_quality_issues=[]
-    )
-    return state
-
-
+from contracts.agents.risk_agent_contract import RiskAgentInput
+from agents.risk_agent import RiskScoringAgent
+from agents.explanation_agent import ExplainabilityAgent
+from agents.decision_agent import DecisionSynthesisAgent
+from contracts.agents.decision_agent_contract import DecisionAgentInput
+from contracts.agents.explanation_agent_contract import ExplanationAgentInput
 from agents.policy_agent import PolicyInterpretationAgent
 from api.factories import get_llm, get_policy_search_client
 from contracts.agents.policy_agent_contract import PolicyAgentInput
+
+def risk_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
+    agent = RiskScoringAgent(
+        llm = get_llm(),
+        prompt_template=open("agents/prompts/risk_prompt.txt").read()
+    )
+    input_data = RiskAgentInput(application=state.application)
+    state.risk_output = agent.run(input_data)
+    return state
 
 def policy_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     agent = PolicyInterpretationAgent(
@@ -36,28 +34,25 @@ def policy_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     return state
 
 def explanation_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
-    state.explanation_output = ExplanationOutput(
-        summary="Moderate risk due to high debt-to-income ratio.",
-        key_reasons=[
-            "Debt-to-income ratio exceeds preferred threshold",
-            "Credit score meets minimum eligibility"
-        ],
-        risk_references=["DEBT_TO_INCOME", "CREDIT_SCORE"],
-        policy_references=state.policy_output.policy_references
+    agent = ExplainabilityAgent(
+        llm = get_llm(),
+        prompt_template=open("agents/prompts/explanation_prompt.txt").read()
     )
+    input_data = ExplanationAgentInput(
+        risk_output=state.risk_output,
+        policy_output=state.policy_output
+    )
+    state.explanation_output = agent.run(input_data)
     return state
 
 def decision_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
-    if state.policy_output.hard_stop:
-        state.decision_output = DecisionOutput(
-            recommendation=DecisionRecommendation.REJECT,
-            required_actions=[],
-            confidence=0.95
-        )
-    else:
-        state.decision_output = DecisionOutput(
-            recommendation=DecisionRecommendation.CONDITIONAL_APPROVE,
-            required_actions=state.policy_output.conditions,
-            confidence=0.77
-        )
+    agent = DecisionSynthesisAgent()
+    input_data = DecisionAgentInput(
+        risk_output=state.risk_output,
+        policy_output=state.policy_output,
+        application=state.application
+    )
+    state.decision_output = agent.run(input_data)
+
     return state
+

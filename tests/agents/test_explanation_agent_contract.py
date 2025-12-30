@@ -1,7 +1,5 @@
-from contracts.explanation_output import ExplanationOutput
 from contracts.risk_output import RiskEvaluationOutput, RiskFactor
 from contracts.policy_output import PolicyEvaluationOutput
-from contracts.agents.decision_agent_contract import DecisionAgentInput
 from contracts.agents.explanation_agent_contract import ExplanationAgentInput
 
 def test_explanation_agent_input_contract():

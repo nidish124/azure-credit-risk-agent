@@ -1,3 +1,4 @@
+from contracts.credit_application import CreditApplication
 from pydantic import BaseModel
 from contracts.decision_output import DecisionOutput
 from contracts.risk_output import RiskEvaluationOutput
@@ -7,6 +8,7 @@ from contracts.policy_output import PolicyEvaluationOutput
 class DecisionAgentInput(BaseModel):
     risk_output: RiskEvaluationOutput
     policy_output: PolicyEvaluationOutput
+    application : CreditApplication
 
 class DecisionAgentOutput(DecisionOutput):
     """

@@ -2,10 +2,24 @@ from agents.decision_agent import DecisionSynthesisAgent
 from contracts.agents.decision_agent_contract import DecisionAgentInput
 from contracts.risk_output import RiskEvaluationOutput, RiskBand
 from contracts.policy_output import PolicyEvaluationOutput, PolicyStatus
-
+from contracts.credit_application import CreditApplication
 
 def make_input(risk_band, policy_status, hard_stop=False, conditions=None):
     return DecisionAgentInput(
+        application = CreditApplication(
+        application_id="app-10",
+        applicant_id="cust-10",
+        employment_type="SALARIED",
+        monthly_income=90000,
+        existing_emi=30000,
+        credit_score=730,
+        loan_amount=600000,
+        loan_tenure_months=36,
+        product_type="PERSONAL_LOAN",
+        channel="DIGITAL",
+        declared_assets_value=800000
+        ),
+        
         risk_output=RiskEvaluationOutput(
             risk_band=risk_band,
             risk_factors=[],
@@ -20,7 +34,9 @@ def make_input(risk_band, policy_status, hard_stop=False, conditions=None):
     )
 
 
+
 def test_hard_stop_reject():
+    print(make_input("LOW", "PASS", hard_stop=True))
     agent = DecisionSynthesisAgent()
     output = agent.run(make_input("LOW", "PASS", hard_stop=True))
     assert output.recommendation == "REJECT"
