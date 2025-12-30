@@ -19,12 +19,12 @@ jobs:
       - name: Build and push image
         run: |
           az acr login --name creditaiacr
-          docker build -t creditaiacr.azurecr.io/credit-ai-service:v1 .
-          docker push creditaiacr.azurecr.io/credit-ai-service:v1
+          docker build -t creditaiacr.azurecr.io/credit-ai-service:v2 .
+          docker push creditaiacr.azurecr.io/credit-ai-service:v2
 
       - name: Deploy to Azure Container App
         run: |
           az containerapp update \
             --name credit-ai-app \
             --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:v1
+            --image creditaiacr.azurecr.io/credit-ai-service:v2
