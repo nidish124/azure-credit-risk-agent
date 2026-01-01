@@ -12,7 +12,7 @@ from contracts.agents.policy_agent_contract import PolicyAgentInput
 def risk_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     
     agent = RiskScoringAgent(
-        llm = get_llm(agent_name="risk_agent"),
+        llm = get_llm(token_tracker=state.token_tracker, agent_name="risk_agent"),
         prompt_template=open("agents/prompts/risk_prompt.txt").read()
     )
     input_data = RiskAgentInput(application=state.application)
@@ -32,7 +32,7 @@ def risk_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
 
 def policy_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     agent = PolicyInterpretationAgent(
-        llm=get_llm(agent_name="policy_agent"),
+        llm=get_llm( token_tracker=state.token_tracker, agent_name="policy_agent"),
         search_client=get_policy_search_client(),
         prompt_template=open("agents/prompts/policy_prompt.txt").read()
     )
@@ -57,7 +57,7 @@ def policy_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
 
 def explanation_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     agent = ExplainabilityAgent(
-        llm = get_llm(agent_name="explanation_agent"),
+        llm = get_llm(token_tracker=state.token_tracker, agent_name="explanation_agent"), 
         prompt_template=open("agents/prompts/explanation_prompt.txt").read()
     )
     input_data = ExplanationAgentInput(

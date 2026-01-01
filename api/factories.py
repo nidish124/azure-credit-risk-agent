@@ -1,3 +1,4 @@
+from infra.token_tracker import TokenTracker
 from config.token_budget import AGENT_TOKEN_LIMITS
 import os
 from dotenv import load_dotenv
@@ -40,12 +41,8 @@ class FakeLLM:
         else:
             return json.dumps({"error": f"Unknown prompt received: {prompt[:50]}..."})
 
-def get_llm(agent_name: str | None = None):
+def get_llm(agent_name: str | None = None, token_tracker:TokenTracker = None):
     mode = os.getenv("EXECUTION_MODE", "local")
-    max_tokens = None
-
-    if agent_name:
-        max_tokens = AGENT_TOKEN_LIMITS.get(agent_name)
     if mode == "ci":
         return FakeLLM()
 
@@ -55,7 +52,8 @@ def get_llm(agent_name: str | None = None):
             api_key=os.getenv("AZURE_OPENAI_SUBSCRIPTION"),
             deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
             api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-            max_tokens=max_tokens
+            agent_name = agent_name,
+            token_tracker=token_tracker,
         )
     return OllamaProvider(agent_name=agent_name)
 

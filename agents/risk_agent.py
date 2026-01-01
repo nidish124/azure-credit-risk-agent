@@ -1,3 +1,4 @@
+from config.token_budget import AGENT_TOKEN_LIMITS
 from agents.llm_provider import LLMProvider
 from agents.base_llm_agent import BaseLLMAgent
 from contracts.agents.risk_agent_contract import RiskAgentOutput
@@ -20,7 +21,6 @@ from contracts.agents.risk_agent_contract import RiskAgentOutput
 #         except Exception as e:
 #             print("RAW OUTPUT", raw_output)
 #             raise RuntimeError(f"Invalid LLM output: {raw_output}") from e
-
 class RiskScoringAgent(BaseLLMAgent):
     def __init__(self, llm: LLMProvider, prompt_template: str):
         super().__init__(
@@ -28,8 +28,8 @@ class RiskScoringAgent(BaseLLMAgent):
             prompt_template=prompt_template,
             output_model=RiskAgentOutput,
             agent_name="risk_agent",
-            primary_max_tokens=600,
-            retry_max_tokens=1200,
+            primary_max_tokens=int(AGENT_TOKEN_LIMITS["risk_agent"]),
+            retry_max_tokens=int((AGENT_TOKEN_LIMITS["risk_agent"])*2),
         )
 
     def run(self, input_data):

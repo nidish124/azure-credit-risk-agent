@@ -9,9 +9,9 @@ class OllamaProvider(LLMProvider):
         self.model = model
         self.agent_name = agent_name
 
-    def generate(self, prompt: str, max_tokens: int = None, schema: dict | None = None) -> str:
+    def generate(self, prompt: str, schema: dict | None = None) -> str:
         if max_tokens is None:
-            max_tokens = AGENT_TOKEN_LIMITS.get(self.agent_name, 1500)
+            max_tokens = AGENT_TOKEN_LIMITS.get(self.agent_name)
         try:
             response_dict = ollama.generate(
                 model=self.model,
@@ -33,8 +33,7 @@ class OllamaProvider(LLMProvider):
                 f"Prompt: {usage['prompt_tokens']}, "
                 f"Completion: {usage['completion_tokens']}, "
                 f"Total: {usage['total_tokens']}")
-                
-            logger.info(f"RAW OLLAMA RESPONSE DICT: {response_dict}")
+            
 
             raw = response_dict.get("response", "")
             if not isinstance(raw, str):

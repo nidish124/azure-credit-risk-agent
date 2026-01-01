@@ -19,8 +19,8 @@ class PolicyInterpretationAgent(BaseLLMAgent):
             prompt_template=prompt_template,
             output_model=PolicyAgentOutput,
             agent_name="policy_agent",
-            primary_max_tokens=800,
-            retry_max_tokens=1500,
+            primary_max_tokens=int(AGENT_TOKEN_LIMITS["policy_agent"]),
+            retry_max_tokens=int((AGENT_TOKEN_LIMITS["policy_agent"])*2),
         )
     
     def prepare_policy_context(self, retrieved_policies: list[str]) -> list[str]:
@@ -42,6 +42,8 @@ class PolicyInterpretationAgent(BaseLLMAgent):
         policy_docs = self.search_client.search(query)
 
         policies = self.prepare_policy_context(policy_docs)
+
+        # policies = self.search_client.search(query)
 
         input_payload = {
             "application": input_data.application.model_dump(),

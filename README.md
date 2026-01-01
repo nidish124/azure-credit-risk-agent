@@ -157,6 +157,23 @@ This is **not a demo chatbot**. It demonstrates the ability to:
 *   Implement CI/CD patterns specifically for AI workloads.
 *   **Think like an AI engineer, not just a prompt engineer.**
 
+## 📊 Benchmarks
+
+| Metric | Before Optimization | After Optimization | Improvement |
+|------|---------------------|-------------------|------------|
+| Avg Latency (s) | 180.13 | 8.97 | ↓ 95.0% |
+| Max Latency (s) | 189.15 | 9.70 | ↓ 94.9% |
+| Total Tokens / Request | ~9,074 | ~2,109 | ↓ 76.8% |
+| Avg.Cost / Request (USD) | ~$0.0089 | ~$0.0023 | ↓ 74.1% |
+| Failure Rate | 0% | 0% | N/A |
+
+### Why the improvements?
+
+- Token budgets enforce deterministic outputs
+- Model selection aligns reasoning vs structured tasks
+- RAG context truncation reduces prompt size
+- Schema-enforced JSON eliminates parsing failures
+
 ---
 
 ### 👤 Author
