@@ -11,7 +11,7 @@ class FakePolicySearchClient:
         ]
 
 class FakeLLM:
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, max_tokens: int, schema) -> str:
         return """
         {
           "policy_status": "CONDITIONAL",
@@ -20,7 +20,6 @@ class FakeLLM:
           "policy_references": ["CREDIT-POL-4.2"]
         }
         """
-
 
 def test_policy_agent_runs():
     app = CreditApplication(

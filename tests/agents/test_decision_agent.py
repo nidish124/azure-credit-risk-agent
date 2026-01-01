@@ -33,8 +33,6 @@ def make_input(risk_band, policy_status, hard_stop=False, conditions=None):
         )
     )
 
-
-
 def test_hard_stop_reject():
     print(make_input("LOW", "PASS", hard_stop=True))
     agent = DecisionSynthesisAgent()

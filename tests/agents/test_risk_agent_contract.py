@@ -26,7 +26,7 @@ def test_risk_agent_input_contract():
     execution = os.getenv("EXECUTION_MODE")
 
 
-    curr_llm = OllamaProvider()
+    curr_llm = OllamaProvider(agent_name="risk_agent")
     
     if execution == "ci":
         curr_llm = FakeLLM()

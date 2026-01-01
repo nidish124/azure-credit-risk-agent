@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from api.routes import router
 from fastapi.middleware.cors import CORSMiddleware
+from config.validate_budget import validate_token_budget
 
 app = FastAPI(
     title="AI Credit Risk Decisioning API",
@@ -11,6 +12,8 @@ prod_origins = ["https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainer
 "https://purple-bush-042ab5003.1.azurestaticapps.net"
 ]
 # ✅ CORS configuration (safe for internal tools)
+
+validate_token_budget()
 
 app.add_middleware(
     CORSMiddleware,

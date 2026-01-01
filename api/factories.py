@@ -1,17 +1,18 @@
+from config.token_budget import AGENT_TOKEN_LIMITS
 import os
 from dotenv import load_dotenv
 from agents.ollama_provider import OllamaProvider
 from agents.azure_openai_provider import AzureOpenAIProvider
-from agents.search.policy_search import PolicySearchClient
+from agents.tools.policy_search import PolicySearchClient
 import json
 import logging
 logger = logging.getLogger("credit_decision")
 load_dotenv(override=True)
 
 class FakeLLM:
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, max_tokens: int = None ,schema: dict | None = None) -> str:
         # Risk Agent
-        if "risk_band" in prompt and "risk_factors" in prompt and "credit risk analysis system" in prompt:
+        if "credit risk analysis system" in prompt and "risk_band" in prompt:
             return json.dumps({
                 "risk_band": "MEDIUM",
                 "risk_factors": [
@@ -21,30 +22,30 @@ class FakeLLM:
             })
         
         # Policy Agent
-        elif "policy_status" in prompt and "hard_stop" in prompt and "banking credit policy interpretation system" in prompt:
+        elif "policy interpretation engine" in prompt and "policy_status" in prompt:
             return json.dumps({
                 "policy_status": "CONDITIONAL",
                 "conditions": ["ADD_GUARANTOR"],
                 "hard_stop": False,
-                "policy_references": ["CREDIT-POL-4.2"]
+                "policy_references": ["Applicants with credit score below 720 require a guarantor.",
+                "The maximum loan amount is 50,000 USD."]
             })
 
         # Explanation Agent
-        elif "risk_references" in prompt and "policy_references" in prompt and "audit explanation system" in prompt:
+        elif "summary" in prompt and "explanation for a loan decision" in prompt:
             return json.dumps({
                 "summary": "Application requires conditional approval due to a policy exception and medium risk profile.",
-                "key_reasons": ["Credit score is below 720", "Policy requires an added guarantor"],
-                "risk_references": ["Credit Score", "Loan to Income Ratio"],
-                "policy_references": ["CREDIT-POL-4.2"]
+                "key_reasons": ["Credit score is below 720", "Policy requires an added guarantor"]
             })
         else:
             return json.dumps({"error": f"Unknown prompt received: {prompt[:50]}..."})
 
-def get_llm():
+def get_llm(agent_name: str | None = None):
     mode = os.getenv("EXECUTION_MODE", "local")
-    logger.info(
-            f"LLM retrieved from execution mode is : {mode}"
-        )
+    max_tokens = None
+
+    if agent_name:
+        max_tokens = AGENT_TOKEN_LIMITS.get(agent_name)
     if mode == "ci":
         return FakeLLM()
 
@@ -52,17 +53,23 @@ def get_llm():
         return AzureOpenAIProvider(
             endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_SUBSCRIPTION"),
-            deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+            deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            max_tokens=max_tokens
         )
-    return OllamaProvider()
+    return OllamaProvider(agent_name=agent_name)
 
 def get_policy_search_client():
     mode = os.getenv("EXECUTION_MODE", "local")
     if mode == "azure":
         return PolicySearchClient(
-            endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
-            index_name=os.getenv("AZURE_SEARCH_INDEX"),
-            api_key=os.getenv("AZURE_SEARCH_API_KEY")
+            search_endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
+            search_index_name=os.getenv("AZURE_SEARCH_INDEX"),
+            search_api_key=os.getenv("AZURE_SEARCH_API_KEY"),
+            embed_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            embed_model_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            embed_api_key=os.getenv("AZURE_OPENAI_SUBSCRIPTION"),
+            embed_model_name=os.getenv("AZURE_EMBED_MODEL_NAME", "text-embedding-3-small")
         )
 
     # fallback (optional, but keep it for safety)

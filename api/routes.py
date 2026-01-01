@@ -26,7 +26,7 @@ def evaluate_credit(app: CreditApplication):
 
         return {
             "decision": final_state["decision_output"],
-            "explanation": final_state["explanation_output"]
+            "explanation": final_state.get("explanation_output")  # May be None if hard_stop
         }
     except Exception as e:
         handle_agent_error(e)

@@ -13,7 +13,5 @@ class ExplanationAgentOutput(ExplanationOutput):
     Inherits:
     - summary
     - key_reasons
-    - risk_references
-    - policy_references
     """
     pass
