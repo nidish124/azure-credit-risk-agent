@@ -1,4 +1,3 @@
-from sqlalchemy.sql._elements_constructors import over
 from fastapi import APIRouter, HTTPException
 from contracts.credit_application import CreditApplication
 from contracts.graph_state import CreditDecisionGraphState
