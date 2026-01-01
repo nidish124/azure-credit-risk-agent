@@ -19,7 +19,7 @@ def evaluate_credit(app: CreditApplication):
     )
     try:
         logger.info(
-            f"USING AZURE DEPLOYMENT: {os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")}, {os.getenv("AZURE_OPENAI_API_VERSION")}"
+            f"USING AZURE DEPLOYMENT: {os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME')}, {os.getenv('AZURE_OPENAI_API_VERSION')}"
         )
         graph = build_credit_decision_graph()
         final_state = graph.invoke(
