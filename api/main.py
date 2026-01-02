@@ -13,22 +13,35 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-tracer = Tracer(
-    exporter = AzureExporter(
-        connection_string= os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
-    ),
-    sampler=ProbabilitySampler(1.0)
-)
+ai_connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+exporter = None
+sampler = None
+
+if ai_connection_string:
+    try:
+        exporter = AzureExporter(connection_string = ai_connection_string)
+        sampler = ProbabilitySampler(1.0)
+    except ValueError as e:
+        exporter = None
+
+# tracer = Tracer(
+#     exporter = AzureExporter(
+#         connection_string= os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+#     ),
+#     sampler=ProbabilitySampler(1.0)
+# )
 
 app = FastAPI(
     title="AI Credit Risk Decisioning API",
     version="1.0.0"
 )
 
-app.add_middleware(
-    FastAPIMiddleware,
-    tracer = tracer
-)
+if exporter:
+    app.add_middleware(
+        FastAPIMiddleware,
+        exporter=exporter,
+        sampler=sampler
+    )
 
 prod_origins = [
     "https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainerapps.io",
