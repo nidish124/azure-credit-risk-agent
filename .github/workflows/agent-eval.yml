@@ -1,8 +1,12 @@
 name: Agent Evaluation
 
 on:
+  push:
+    branches:
+        - feature/test-ci-eval
   pull_request:
   workflow_dispatch:
+
 
 jobs:
   evaluate:
@@ -31,7 +35,7 @@ jobs:
 
       - name: Run automated evaluation
         run: |
-          python evaluation.run_eval
+          python evaluation/run_eval.py
 
       - name: Upload evaluation artifacts
         uses: actions/upload-artifact@v4
