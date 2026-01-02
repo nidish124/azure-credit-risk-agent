@@ -192,6 +192,30 @@ Metrics are collected per-request and aggregated for analysis.
 
 ---
 
+## 🔍 Observability & Monitoring
+
+The system exposes:
+- Structured logs (JSON)
+- Azure Application Insights telemetry
+- Read-only `/metrics` endpoint for quality & cost tracking
+
+This enables production monitoring, alerting, and cost analysis.
+
+---
+
+## Automated Evaluation Results
+
+| Metric | Value |
+|------|------|
+| Total Cases | 10 |
+| Decision Accuracy | 0.7 |
+| RAG Hit Rate | 0.8 |
+| p50 Latency | 7101.671600015834 ms |
+| p95 Latency | 8594.69769988209 ms |
+| Avg Cost / Request | $0.0019110449999999997 |
+
+---
+
 ### 👤 Author
 
 **Nidish M**

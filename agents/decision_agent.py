@@ -86,8 +86,6 @@ class DecisionSynthesisAgent:
             existing_emi=application.existing_emi
         )
 
-        print("dti ", dti)
-
         num_conditions = len(policy.conditions)
 
         confidence = self._compute_confidence(

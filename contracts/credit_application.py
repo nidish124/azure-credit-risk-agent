@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, Field, PositiveInt, model_validator
-from typing import Optional
+from typing import Optional, Literal
 
 
 class EmploymentType(str, Enum):
@@ -27,7 +27,7 @@ class CreditApplication(BaseModel):
 
     employment_type: EmploymentType
     monthly_income: PositiveInt = Field(..., description="Monthly income in INR")
-    existing_emi: PositiveInt = Field(..., description="Total existing EMI obligations")
+    existing_emi: PositiveInt | Literal[0] = Field(..., description="Total existing EMI obligations")
 
     credit_score: PositiveInt = Field(..., ge=300, le=900)
 

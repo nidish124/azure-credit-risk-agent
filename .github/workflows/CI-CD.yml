@@ -39,6 +39,8 @@ jobs:
         run: |
           pytest -q
 
+      
+
   deploy:
     name: Deploy to Azure Container Apps
     runs-on: ubuntu-latest
