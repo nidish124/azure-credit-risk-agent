@@ -35,7 +35,7 @@ jobs:
 
       - name: Run automated evaluation
         env:
-              EXECUTION_MODE: ci
+              EXECUTION_MODE: azure
         run: |
           python -m evaluation.run_eval
 
