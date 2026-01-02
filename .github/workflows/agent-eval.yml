@@ -34,6 +34,8 @@ jobs:
           pip install .
 
       - name: Run automated evaluation
+        env:
+              EXECUTION_MODE: ci
         run: |
           python -m evaluation.run_eval
 
