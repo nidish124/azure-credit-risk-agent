@@ -1,3 +1,5 @@
+from evaluation.registry import MetricsRegistry
+from evaluation.decision_metrics import DecisionMetrics
 from contracts.graph_state import CreditDecisionGraphState
 from contracts.agents.risk_agent_contract import RiskAgentInput
 from agents.risk_agent import RiskScoringAgent
@@ -85,5 +87,10 @@ def decision_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
     )
     state.decision_output = agent.run(input_data)
 
-    return state
+    MetricsRegistry.decision.record(
+        decision_output=state.decision_output,
+        risk_output=state.risk_output,
+        policy_output=state.policy_output
+    )
 
+    return state

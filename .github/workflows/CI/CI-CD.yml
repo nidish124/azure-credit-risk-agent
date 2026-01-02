@@ -1,0 +1,76 @@
+name: CI/CD Pipeline
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+
+jobs:
+  build-and-test:
+    name: Build & Test Application
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set-tag.outputs.tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set dynamic image tag
+        id: set-tag
+        run: |
+          TAG=${GITHUB_SHA::7}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Generated Tag: $TAG"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+
+      - name: Run tests
+        env:
+            EXECUTION_MODE: ci
+        run: |
+          pytest -q
+
+  deploy:
+    name: Deploy to Azure Container Apps
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    if: github.ref = 'refs/heads/main'
+
+    env:
+      DYNAMIC_TAG: ${{ needs.build-and-test.outputs.image_tag }}
+      IMAGE_NAME: credit-ai-service
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout code for deployment
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and push image
+        run: |
+          FULL_IMAGE_PATH=creditaiacr.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.DYNAMIC_TAG }}
+          az acr login --name creditaiacr
+          docker build -t $FULL_IMAGE_PATH .
+          docker push $FULL_IMAGE_PATH
+
+      - name: Deploy to Azure Container App
+        run: |
+          FULL_IMAGE_PATH=creditaiacr.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.DYNAMIC_TAG }}
+          echo "Updating Container App to use image: $FULL_IMAGE_PATH"
+          az containerapp update \
+            --name credit-ai-app \
+            --resource-group credit-ai-rg \
+            --image creditaiacr.azurecr.io/credit-ai-service:v3

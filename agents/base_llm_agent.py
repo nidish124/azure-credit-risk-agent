@@ -1,3 +1,5 @@
+from evaluation.registry import MetricsRegistry
+from evaluation.agent_metrics import AgentMetrics
 from h11._abnf import method
 import logging
 from langchain_core.output_parsers import PydanticOutputParser
@@ -40,6 +42,7 @@ class BaseLLMAgent:
                 max_tokens=self.primary_max_tokens,
                 schema=schema,
             )
+            MetricsRegistry.agent.record_success(self.agent_name)
             return self.parser.parse(raw)
 
         except Exception as e:
@@ -57,11 +60,15 @@ class BaseLLMAgent:
                     max_tokens=self.retry_max_tokens,
                     schema=schema,
                 )
+                MetricsRegistry.agent.record_retry(self.agent_name)
                 return self.parser.parse(raw)
 
             except Exception as e:
                 if self.agent_name == "explanation_agent":
                     logger.error("explanation_fallback_used")
+
+                    MetricsRegistry.agent.record_failure(self.agent_name)
+
                     return self.parser.pydantic_object(
                         summary="Decision explanation unavailable due to token limits.",
                         key_reasons=[]

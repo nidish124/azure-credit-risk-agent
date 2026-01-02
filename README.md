@@ -157,6 +157,8 @@ This is **not a demo chatbot**. It demonstrates the ability to:
 *   Implement CI/CD patterns specifically for AI workloads.
 *   **Think like an AI engineer, not just a prompt engineer.**
 
+---
+
 ## 📊 Benchmarks
 
 | Metric | Before Optimization | After Optimization | Improvement |
@@ -167,12 +169,26 @@ This is **not a demo chatbot**. It demonstrates the ability to:
 | Avg.Cost / Request (USD) | ~$0.0089 | ~$0.0023 | ↓ 74.1% |
 | Failure Rate | 0% | 0% | N/A |
 
+---
+
 ### Why the improvements?
 
 - Token budgets enforce deterministic outputs
 - Model selection aligns reasoning vs structured tasks
 - RAG context truncation reduces prompt size
 - Schema-enforced JSON eliminates parsing failures
+
+---
+
+## 📈 Evaluation Metrics
+
+This system tracks:
+- Decision quality consistency
+- RAG effectiveness
+- Agent reliability
+- Cost & latency efficiency
+
+Metrics are collected per-request and aggregated for analysis.
 
 ---
 

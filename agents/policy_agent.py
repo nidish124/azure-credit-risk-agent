@@ -1,3 +1,5 @@
+from evaluation.registry import MetricsRegistry
+from evaluation.rag_metrics import RAGMetrics
 from agents.base_llm_agent import BaseLLMAgent
 import json
 from agents.llm_provider import LLMProvider
@@ -39,7 +41,19 @@ class PolicyInterpretationAgent(BaseLLMAgent):
             f"credit score {input_data.application.credit_score}, "
             f"risk band {input_data.risk_output.risk_band}"
         )
+
+        fallback_used = False
+
         policy_docs = self.search_client.search(query)
+
+        if not policy_docs:
+            fallback_used = True
+            policy_docs = self.search_client.keyword_search(query)
+        
+        MetricsRegistry.rag.record(
+            retrieved_docs=policy_docs,
+            fallback_used= fallback_used
+        )
 
         policies = self.prepare_policy_context(policy_docs)
 
@@ -52,69 +66,3 @@ class PolicyInterpretationAgent(BaseLLMAgent):
         }
 
         return super().run(json.dumps(input_payload))
-
-# class PolicyInterpretationAgent:
-#     def __init__(
-#         self,
-#         llm: LLMProvider,
-#         search_client: PolicySearchClient,
-#         prompt_template: str):
-
-#         self.llm = llm
-#         self.search_client = search_client
-#         self.prompt_template = prompt_template
-
-#     def prepare_policy_context(self, retrieved_policies: list[str]) -> list[str]:
-#         limited = limit_rag_context(
-#             retrieved_policies,
-#             AGENT_TOKEN_LIMITS["policy_agent"]
-#             )
-#         logger.info(
-#             "rag_context_limited", extra={"orignial_docs": len(retrieved_policies), "final_docs": len(limited)}
-#             )
-#         return limited
-
-#     def run(self, inp: PolicyAgentInput) -> PolicyAgentOutput:
-#         query = (
-#             f"Loan policy for {inp.application.product_type}, "
-#             f"credit score {inp.application.credit_score}, "
-#             f"risk band {inp.risk_output.risk_band}"
-#         )
-
-#         policy_docs = self.search_client.search(query)
-
-#         policies = self.prepare_policy_context(policy_docs)
-
-#         logger.info(
-#             f"Policy search executed | query='{query}' | docs_retrieved={len(policies)}"
-#         )
-
-#         logger.info(
-#             f"Policy documents retrieved: {policies}"
-#         )
-        
-#         prompt = f"""
-#         {self.prompt_template}
-
-#         Applicant:
-#         {inp.application.model_dump_json()}
-
-#         Risk Output:
-#         {inp.risk_output.model_dump_json()}
-
-#         Policy Clauses:
-#         {policies}
-#         """
-
-#         raw = self.llm.generate(prompt)
-
-#         logger.info(
-#             f"LLM Used: {self.llm}, output of raw: {raw}"
-#         )
-
-#         try:
-#             parsed = json.loads(raw)
-#             return PolicyAgentOutput(**parsed)
-#         except Exception as e:
-#             raise RuntimeError(f"Invalid Policy agent output: {raw}") from e
-
