@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.validate_budget import validate_token_budget
 from evaluation.metrics import router as metrics_router
 
-from Opencensus.ext.fastapi.fastapi_middleware import FastAPIMiddleware
+from opencensus.ext.fastapi.fastapi_middleware import FastAPIMiddleware
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
