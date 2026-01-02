@@ -35,7 +35,7 @@ jobs:
 
       - name: Run automated evaluation
         run: |
-          python -m evaluation/run_eval.py
+          python -m evaluation.run_eval
 
       - name: Upload evaluation artifacts
         uses: actions/upload-artifact@v4
