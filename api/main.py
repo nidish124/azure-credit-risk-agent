@@ -9,6 +9,9 @@ from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 import os
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 tracer = Tracer(
     exporter = AzureExporter(
