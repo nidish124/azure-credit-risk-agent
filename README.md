@@ -110,8 +110,8 @@ docker run -p 8000:8000 credit-ai-service
 ---
 
 ## 👤 Author: Nidish M
-**AI / ML Engineer Specializing in Agentic Workflows**
+**AI / ML Engineer**
 
 > "Building AI systems that don't just 'chat', but perform work with corporate-grade reliability."
 
-[LinkedIn](your-linkedin-link) | [Portfolio](your-portfolio-link) | [Email](mailto:your-email)
+[LinkedIn](https://www.linkedin.com/in/nidish-m1204) | [Email](nidish124@gmail.com)
