@@ -1,0 +1,6 @@
+{
+    "decision_accuracy_min": 0.8,
+    "rag_hit_rate_min": 0.7,
+    "P95_latency_ms_max": 9000,
+    "avg_cost_per_request_max": 0.01
+}

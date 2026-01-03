@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.validate_budget import validate_token_budget
 from evaluation.metrics import router as metrics_router
 
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from fastapi import Response
+
 from opencensus.ext.fastapi.fastapi_middleware import FastAPIMiddleware
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace.samplers import ProbabilitySampler
@@ -36,6 +39,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
+@app.get("/metrics")
+def metrics():
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
+
 if exporter:
     app.add_middleware(
         FastAPIMiddleware,
@@ -51,7 +61,8 @@ prod_origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=prod_origins,          # For local dev only
+    allow_origins=["*"],          # For local dev only
+    #allow_origins=prod_origins,          # For PROD
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

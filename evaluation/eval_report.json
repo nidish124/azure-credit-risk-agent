@@ -1,8 +1,8 @@
 {
   "total_cases": 10,
   "decision_accuracy": 0.7,
-  "rag_hit_rate": 0.8,
-  "p50_latency_ms": 7101.671600015834,
-  "p95_latency_ms": 8594.69769988209,
-  "avg_cost_per_request": 0.0019110449999999997
+  "rag_hit_rate": 1.0,
+  "p50_latency_ms": 7469.334699911997,
+  "p95_latency_ms": 8729.06420007348,
+  "avg_cost_per_request": 0.001994625
 }

@@ -1,6 +1,7 @@
 from evaluation.registry import MetricsRegistry
 from evaluation.rag_metrics import RAGMetrics
 from agents.base_llm_agent import BaseLLMAgent
+from monitoring.prometheus_metrics import RAG_HITS, RAG_MISSES
 import json
 from agents.llm_provider import LLMProvider
 from agents.tools.policy_search import PolicySearchClient
@@ -46,10 +47,15 @@ class PolicyInterpretationAgent(BaseLLMAgent):
 
         policy_docs = self.search_client.search(query)
 
+        if policy_docs:
+            RAG_HITS.inc()
+        else:
+            RAG_MISSES.inc()
+
         if not policy_docs:
             fallback_used = True
             policy_docs = self.search_client.keyword_search(query)
-        
+            
         MetricsRegistry.rag.record(
             retrieved_docs=policy_docs,
             fallback_used= fallback_used

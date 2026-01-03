@@ -1,4 +1,5 @@
 from config.token_budget import AGENT_TOKEN_LIMITS
+from monitoring.prometheus_metrics import TOKENS_USED
 from openai import AzureOpenAI
 from agents.llm_provider import LLMProvider
 import logging
@@ -47,6 +48,11 @@ class AzureOpenAIProvider(LLMProvider):
         respond = self.client.chat.completions.create(**kwargs)
 
         usage = respond.usage
+
+        TOKENS_USED.labels(
+            agent=self.agent_name,
+            model=self.deployment_name
+        ).inc(usage.total_tokens)
 
         self.token_tracker.record_llm_usage(
             agent_name=self.agent_name,

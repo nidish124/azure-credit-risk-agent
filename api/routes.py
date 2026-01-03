@@ -6,6 +6,13 @@ from api.logging import setup_logger
 from api.error_handler import handle_agent_error
 import os
 import json
+import time
+from monitoring.prometheus_metrics import (
+    REQUEST_COUNT,
+    REQUEST_FAILURES,
+    REQUEST_LATENCY,
+    REQUEST_COST,
+)
 from dotenv import load_dotenv
 load_dotenv(override=True)
 router = APIRouter()
@@ -16,6 +23,8 @@ def evaluate_credit(app: CreditApplication):
     logger.info(
         f"Received credit evaluation request | application_id={app.application_id}"
     )
+    REQUEST_COUNT.inc()
+    start = time.time()
     try:
         logger.info(
             f"USING AZURE DEPLOYMENT: {os.getenv('AZURE_OPENAI_DEPLOYMENT_NAME')}, {os.getenv('AZURE_OPENAI_API_VERSION')}"
@@ -42,4 +51,9 @@ def evaluate_credit(app: CreditApplication):
             "explanation": final_state.get("explanation_output")  # May be None if hard_stop
         }
     except Exception as e:
+        REQUEST_FAILURES.inc()
         handle_agent_error(e)
+    finally:
+        latency = time.time() - start
+        REQUEST_LATENCY.observe(latency)
+        REQUEST_COST.observe(cost_data["total_cost"])
