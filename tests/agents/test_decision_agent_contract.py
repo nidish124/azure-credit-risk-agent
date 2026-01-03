@@ -29,7 +29,8 @@ def test_decision_agent_input_contract():
         risk_factors=[
             RiskFactor(factor="DEBT_TO_INCOME", impact="HIGH"),
             RiskFactor(factor="CREDIT_SCORE", impact="MEDIUM")
-        ]
+        ],
+        max_eligibility_loan_amount=60000
     )
     
     inp = DecisionAgentInput(risk_output = risk_output,

@@ -23,7 +23,8 @@ def test_explanation_agent_runs():
         risk_factors=[
             {"factor": "DEBT_TO_INCOME", "impact": "HIGH"}
         ],
-        data_quality_issues=[]
+        data_quality_issues=[],
+        max_eligibility_loan_amount = 70000
     )
 
     policy = PolicyEvaluationOutput(

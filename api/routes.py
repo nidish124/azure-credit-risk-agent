@@ -33,6 +33,7 @@ def evaluate_credit(app: CreditApplication):
         final_state = graph.invoke(
             CreditDecisionGraphState(application=app)
         )
+
         cost_data = {
                 "total_cost": final_state["token_tracker"].total_cost(),
                 "per_agent_cost": final_state["token_tracker"].per_agent_cost(),

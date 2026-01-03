@@ -23,7 +23,8 @@ def make_input(risk_band, policy_status, hard_stop=False, conditions=None):
         risk_output=RiskEvaluationOutput(
             risk_band=risk_band,
             risk_factors=[],
-            data_quality_issues=[]
+            data_quality_issues=[],
+            max_eligibility_loan_amount = 80000
         ),
         policy_output=PolicyEvaluationOutput(
             policy_status=policy_status,

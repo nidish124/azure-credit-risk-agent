@@ -7,7 +7,8 @@ def test_valid_risk_output():
         risk_factors=[
             RiskFactor(factor="DEBT_TO_INCOME", impact="HIGH"),
             RiskFactor(factor="CREDIT_SCORE", impact="MEDIUM")
-        ]
+        ],
+        max_eligibility_loan_amount=60000
     )
 
     assert risk.risk_band == "MEDIUM"

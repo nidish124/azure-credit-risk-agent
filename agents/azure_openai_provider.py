@@ -60,7 +60,9 @@ class AzureOpenAIProvider(LLMProvider):
             prompt_tokens=usage.prompt_tokens,
             completion_tokens=usage.completion_tokens,
             )
-
+        # if self.agent_name == "risk_agent":
+        #     logger.info(f"risk agent : {respond.choices[0].message.content}")
+            
         logger.info(f"LLM Token Usage for {self.agent_name}: "
             f"Prompt: {usage.prompt_tokens}, "
             f"Completion: {usage.completion_tokens}, "

@@ -209,10 +209,24 @@ This enables production monitoring, alerting, and cost analysis.
 |------|------|
 | Total Cases | 10 |
 | Decision Accuracy | 0.7 |
-| RAG Hit Rate | 0.8 |
+| RAG Hit Rate | 100% |
 | p50 Latency | 7101.671600015834 ms |
 | p95 Latency | 8594.69769988209 ms |
 | Avg Cost / Request | $0.0019110449999999997 |
+
+---
+
+## Deployment
+- Azure Container Apps
+- Azure OpenAI
+- Azure AI Search
+- Prometheus + Grafana
+- Application Insights
+
+---
+
+## Status
+✅ Production Ready — v1.0.0
 
 ---
 
