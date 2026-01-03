@@ -3,6 +3,9 @@ name: CI/CD Pipeline
 on:
     push:
         branches: ["main"]
+        paths-inore:
+            - '**.md'
+            - 'docs/**'
     pull_request:
 
 jobs:
