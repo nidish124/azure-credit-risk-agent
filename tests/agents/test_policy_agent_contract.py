@@ -20,8 +20,7 @@ def test_policy_agent_input_contract():
 
     risk_inp = RiskEvaluationOutput(
         risk_band="LOW",
-        risk_factors=[],
-        max_eligibility_loan_amount=60000
+        risk_factors=[]
     )
 
     inp = PolicyAgentInput(application=application, risk_output=risk_inp)

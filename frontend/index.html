@@ -99,9 +99,6 @@
     <h3>Decision</h3>
     <div id="decision"></div>
 
-    <h3>Eligibility</h3>
-    <div id="eligibility"></div>
-
     <h3>Explanation</h3>
     <ul id="explanation"></ul>
 
@@ -144,7 +141,6 @@
             <p><strong>Recommendation:</strong> ${data.decision.recommendation}</p>
             <p><strong>Confidence:</strong> ${data.decision.confidence}</p>
             <p><strong>Human Approval Required:</strong> ${data.decision.human_approval_required}</p>
-            <p><strong>Maximum Elligibility Loan Amount: :</strong> ₹${Number(data.decision.max_eligibility_loan_amount).toLocaleString()}</p>
             <p><strong>Required Actions:</strong> ${data.decision.required_actions.length > 0
                     ? data.decision.required_actions.join(", ")
                     : "None"

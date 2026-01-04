@@ -19,8 +19,7 @@ class FakeLLM:
                 "risk_factors": [
                     {"factor": "Credit Score", "impact": "HIGH"}
                 ],
-                "data_quality_issues": [],
-                "max_eligibility_loan_amount": 1000
+                "data_quality_issues": []
             })
         
         # Policy Agent

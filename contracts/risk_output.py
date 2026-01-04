@@ -23,6 +23,3 @@ class RiskEvaluationOutput(BaseModel):
         description="Missing or suspicious data flags"
     )
 
-    max_eligibility_loan_amount: int = Field(
-        ..., description="Maximum loan amount eligible for applicant (inr)"
-    )

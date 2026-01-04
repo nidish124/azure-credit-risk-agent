@@ -14,8 +14,7 @@ def test_explanation_agent_input_contract():
         risk_factors=[
             RiskFactor(factor="DEBT_TO_INCOME", impact="HIGH"),
             RiskFactor(factor="CREDIT_SCORE", impact="MEDIUM")
-        ],
-        max_eligibility_loan_amount=60000
+        ]
     )
     
     inp = ExplanationAgentInput(risk_output = risk_output, policy_output = policy_output)

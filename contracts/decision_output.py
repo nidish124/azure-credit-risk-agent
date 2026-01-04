@@ -29,8 +29,3 @@ class DecisionOutput(BaseModel):
         default=True,
         description="Explicit human-in-the-loop requirement"
     )
-
-    
-    max_eligibility_loan_amount: int = Field(
-        ..., description="Maximum loan amount eligible for applicant (inr)"
-    )

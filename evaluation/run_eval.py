@@ -27,11 +27,12 @@ def run():
         
         latency = time.perf_counter() - start
         latncies.append(latency)
-        
-        print(f"latency: {latency}, {final_state['decision_output'].recommendation}")
+        #print("final_state", final_state)
 
         if final_state["decision_output"].recommendation == case["expected"]["decision"]:
             decision_correct += 1
+
+        print(f"latency: {latency} | {final_state['decision_output'].recommendation} | recommened: {case["expected"]["decision"]} ")
 
         if final_state["policy_output"].policy_references:
             rag_hits += 1

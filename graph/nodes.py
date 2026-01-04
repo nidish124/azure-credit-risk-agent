@@ -93,6 +93,5 @@ def decision_node(state: CreditDecisionGraphState) -> CreditDecisionGraphState:
         policy_output=state.policy_output
     )
 
-    state.decision_output.max_eligibility_loan_amount = state.risk_output.max_eligibility_loan_amount
 
     return state

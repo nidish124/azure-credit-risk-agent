@@ -39,8 +39,7 @@ def test_policy_agent_runs():
     risk = RiskEvaluationOutput(
         risk_band=RiskBand.MEDIUM,
         risk_factors=[],
-        data_quality_issues=[],
-        max_eligibility_loan_amount = 70000
+        data_quality_issues=[]
     )
 
     agent = PolicyInterpretationAgent(

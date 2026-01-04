@@ -99,6 +99,5 @@ class DecisionSynthesisAgent:
         return DecisionAgentOutput(
             recommendation=recommendation,
             required_actions=required_actions,
-            confidence=confidence,
-            max_eligibility_loan_amount = risk.max_eligibility_loan_amount
+            confidence=confidence
         )
