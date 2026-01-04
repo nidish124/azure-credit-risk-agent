@@ -57,4 +57,7 @@ def evaluate_credit(app: CreditApplication):
     finally:
         latency = time.time() - start
         REQUEST_LATENCY.observe(latency)
-        REQUEST_COST.observe(cost_data["total_cost"])
+        if cost_data:
+            REQUEST_COST.observe(cost_data.get("total_cost"))
+        else:
+            logger.info("cost is not there")
