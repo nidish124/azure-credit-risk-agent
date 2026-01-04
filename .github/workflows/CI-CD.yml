@@ -77,4 +77,4 @@ jobs:
           az containerapp update \
             --name credit-ai-app \
             --resource-group credit-ai-rg \
-            --image creditaiacr.azurecr.io/credit-ai-service:v3
+            --image creditaiacr.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.DYNAMIC_TAG }}
