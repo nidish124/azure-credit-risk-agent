@@ -61,8 +61,8 @@ prod_origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # For local dev only
-    #allow_origins=prod_origins,          # For PROD
+    #allow_origins=["*"],          # For local dev only
+    allow_origins=prod_origins,    # For PROD
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

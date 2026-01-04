@@ -123,8 +123,8 @@
                 declared_assets_value: Number(document.getElementById("declared_assets_value").value)
             };
 
-            //const res = await fetch("https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainerapps.io/credit/evaluate", {
-            const res = await fetch("http://127.0.0.1:8000/credit/evaluate", {
+            const res = await fetch("https://credit-ai-app.whitestone-2b0f5c99.eastus.azurecontainerapps.io/credit/evaluate", {
+                //const res = await fetch("http://127.0.0.1:8000/credit/evaluate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
